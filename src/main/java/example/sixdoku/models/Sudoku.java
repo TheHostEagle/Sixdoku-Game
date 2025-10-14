@@ -1,6 +1,7 @@
 package example.sixdoku.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -40,27 +41,47 @@ public class Sudoku
      */
     public void generateSudoku()
     {
-        ArrayList<Integer> predefinedSolution = new ArrayList<>();
-        int[] solutionArray =
-                {
-                1, 2, 3, 4, 5, 6,
-                4, 5, 6, 1, 2, 3,
-                2, 3, 4, 5, 6, 1,
-                5, 6, 1, 2, 3, 4,
-                3, 4, 5, 6, 1, 2,
-                6, 1, 2, 3, 4, 5
-        };
-
-        for (int i = 0; i < solutionArray.length; i++)
-        {
-            int value = solutionArray[i];
-            predefinedSolution.add(value);
-        }
-
-        this.solution = new ArrayList<>(predefinedSolution);
-        this.board = new ArrayList<>(this.solution);
+        initializeEmptyBoard();
+        fillBoard(0);
+        solution = new ArrayList<>(board);
         createPartialVersion();
-        this.initialBoard = new ArrayList<>(this.board);
+        initialBoard =  new ArrayList<>(board);
+    }
+
+    /**
+     * Fill the Sudoku puzzle with a valid solution
+     * @param index actual position in the array
+     * @return true if sudoku puzzle was completed and false if a cell could not be filled
+     */
+
+    private boolean fillBoard(int index)
+    {
+        if(index >= TOTAL_CELLS) { return true; }
+
+        int row = index / SIZE;
+        int col = index % SIZE;
+
+        ArrayList<Integer> numbers = new ArrayList<>();
+        for(int i = 1; i <= SIZE; i++)
+        {
+            numbers.add(i);
+        }
+        Collections.shuffle(numbers);
+
+        for (int i = 0; i < numbers.size(); i++)
+        {
+            int num = numbers.get(i);
+            if (isValidMove(row, col, num) == true)
+            {
+                board.set(index, num);
+                if (fillBoard(index + 1) == true)
+                {
+                    return true;
+                }
+                board.set(index, 0);
+            }
+        }
+        return false;
     }
 
     /**
@@ -95,40 +116,39 @@ public class Sudoku
     /**
      * Checks if a move is valid according to Sudoku rules
      */
-    public boolean isValidMove(int row, int col, int number)
+    public boolean isValidMove(int row, int col, int num)
     {
-
-        for (int c = 0; c < SIZE; c++)
+        for(int j = 0; j < SIZE; j++)
         {
-            if (c != col && getValue(row, c) == number)
+            int index = (row * SIZE) + j;
+            if(board.get(index) == num)
             {
                 return false;
             }
         }
 
-
-        for (int r = 0; r < SIZE; r++)
+        for(int z = 0; z < SIZE; z++)
         {
-            if (r != row && getValue(r, col) == number)
-            {
-                return false;
-            }
+             int index = (z * SIZE) + col;
+             if(board.get(index) == num)
+             {
+                 return false;
+             }
         }
 
         int startRow = (row / 2) * 2;
-        int startCol = (col / 3) * 3;
-
-        for (int r = startRow; r < startRow + 2; r++)
+        int startCol = (col / 3 ) * 3;
+        for(int k = startRow; k < startRow + 2; k++)
         {
-            for (int c = startCol; c < startCol + 3; c++)
+            for(int l = startCol; l < startCol + 3; l++)
             {
-                if ((r != row || c != col) && getValue(r, c) == number)
+                int index = (k * SIZE) + l;
+                if(board.get(index) == num)
                 {
                     return false;
                 }
             }
         }
-
         return true;
     }
 
