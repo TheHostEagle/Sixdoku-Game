@@ -33,7 +33,7 @@ public class welcomeController
 
             FXMLLoader loader = new FXMLLoader(App.class.getResource("views/gameView.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 900, 600);
+            Scene scene = new Scene(root, 700, 550);
 
             stage.setScene(scene);
 

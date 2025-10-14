@@ -113,6 +113,13 @@ public class Sudoku
         return false;
     }
 
+    //para modificar el board original.
+    public void setValueDirectly(int row, int col, int number)
+    {
+        int position = convertCoordinates(row, col);
+        board.set(position, number);
+    }
+
     /**
      * Checks if a move is valid according to Sudoku rules
      */
