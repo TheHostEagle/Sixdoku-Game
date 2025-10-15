@@ -10,14 +10,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
+import static javafx.scene.input.KeyCode.ENTER;
+
 public class gameController
 {
 
     @FXML
     private GridPane gridPane;
-
-    @FXML
-    private Button startButton;
 
     @FXML
     private ImageView imageIcon2;
@@ -65,7 +64,7 @@ public class gameController
     }
 
     /**
-     * Creates an individual cell
+     * Creates an individual cell with change listener
      */
     private TextField createCell(int row, int col)
     {
@@ -75,7 +74,6 @@ public class gameController
         int value = sudoku.getValue(row, col);
         int initialValue = sudoku.getInitialValue(row, col);
 
-
         if (value != 0)
         {
             cell.setText(String.valueOf(value));
@@ -83,18 +81,64 @@ public class gameController
             {
                 cell.setEditable(false);
                 cell.setStyle(getCellStyle(row, col, true));
-            } else
+            }
+            else
             {
                 cell.setEditable(true);
                 cell.setStyle(getCellStyle(row, col, false));
             }
-        } else
+        }
+        else
         {
             cell.setText("");
             cell.setEditable(true);
             cell.setStyle(getCellStyle(row, col, false));
         }
 
+        cell.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            try {
+                if (newValue == null || newValue.trim().isEmpty())
+                {
+                    sudoku.setValueDirectly(row, col, 0);
+                }
+                else
+                {
+                    int number = Integer.parseInt(newValue);
+                    if (number >= 1 && number <= 6)
+                    {
+                        sudoku.setValueDirectly(row, col, number);
+                    }
+                    else
+                    {
+                        AlertBox alertBox = new AlertBox();
+                        alertBox.showAlertBox("Numero Invalido",
+                                "Solo se permiten numeros del 1 al 6",
+                                "");
+                        cell.setText("");
+                        sudoku.setValueDirectly(row, col, 0);
+                    }
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                AlertBox alertBox = new AlertBox();
+                alertBox.showAlertBox("Entrada Invalida",
+                        "Solo se permiten numeros enteros del 1 al 6",
+                        "");
+
+                cell.setText("");
+                sudoku.setValueDirectly(row, col, 0);
+            }
+
+            cell.setOnKeyPressed(event ->
+            {
+                if (event.getCode() == ENTER)
+                {
+                    validate();
+                }
+            });
+        });
         return cell;
     }
 
@@ -143,19 +187,6 @@ public class gameController
         }
     }
 
-    /**
-     * RESET button - Returns to initial state
-     */
-    @FXML
-    private void onActionReset()
-    {
-        AlertBox alertBox = new AlertBox();
-        System.out.println("Boton de reinicio presionado");
-        sudoku.reset();
-        displayBoard();
-        alertBox.showAlertBox("Reiniciar Juego", "Tablero devuelto al estado inicial","");
-    }
-
     public void startGIF()
     {
         try
@@ -182,6 +213,8 @@ public class gameController
             giveHint();
         }
     }
+
+
 
     private void giveHint()
     {
