@@ -1,12 +1,14 @@
 package example.sixdoku.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import example.sixdoku.models.Sudoku;
 import example.sixdoku.models.AlertBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class gameController
 {
@@ -16,6 +18,9 @@ public class gameController
 
     @FXML
     private Button startButton;
+
+    @FXML
+    private ImageView imageIcon2;
 
     @FXML
     private Button validateButton;
@@ -30,6 +35,7 @@ public class gameController
     {
         this.sudoku = new Sudoku();
         showEmptyBoard();
+        startGIF();
     }
 
     /**
@@ -150,4 +156,76 @@ public class gameController
         alertBox.showAlertBox("Reiniciar Juego", "Tablero devuelto al estado inicial","");
     }
 
+    public void startGIF()
+    {
+        try
+        {
+            Image gif = new Image(getClass().getResourceAsStream("/example/sixdoku/images/disco.gif"));
+            imageIcon2.setImage(gif);
+
+            imageIcon2.setFitWidth(31);
+            imageIcon2.setFitHeight(28);
+            imageIcon2.setPreserveRatio(true);
+
+        } catch (Exception e)
+        {
+            System.err.println("Error al cargar el GIF: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleImageClick(MouseEvent event)
+    {
+        if (event.getSource() == imageIcon2)
+        {
+            System.out.println("Boton pista clickeado - Buscando celda vacia...");
+            giveHint();
+        }
+    }
+
+    private void giveHint()
+    {
+        // Buscar celdas vacías y guardar la cuenta en este contador
+        int emptyCount = 0;
+        for (int row = 0; row < 6; row++)
+        {
+            for (int col = 0; col < 6; col++)
+            {
+                if (sudoku.getValue(row, col) == 0)
+                {
+                    emptyCount++;
+                }
+            }
+        }
+
+        if (emptyCount == 0)
+        {
+            new AlertBox().showAlertBox("Sin pistas", "No hay celdas vacias", "");
+            return;
+        }
+
+        int randomIndex = (int) (Math.random() * emptyCount);
+        int currentIndex = 0;
+
+        for (int row = 0; row < 6; row++)
+        {
+            for (int col = 0; col < 6; col++)
+            {
+                if (sudoku.getValue(row, col) == 0)
+                {
+                    if (currentIndex == randomIndex)
+                    {
+                        int correctNumber = sudoku.getSolution().get(row * 6 + col);
+
+                        sudoku.setValueDirectly(row, col, correctNumber);
+
+                        displayBoard();
+                        new AlertBox().showAlertBox("Pista", "Numero " + correctNumber + " agregado", "");
+                        return;
+                    }
+                    currentIndex++;
+                }
+            }
+        }
+    }
 }
