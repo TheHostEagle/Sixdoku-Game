@@ -35,6 +35,7 @@ public class gameController
         this.sudoku = new Sudoku();
         showEmptyBoard();
         startGIF();
+
     }
 
     /**
@@ -69,7 +70,7 @@ public class gameController
     private TextField createCell(int row, int col)
     {
         TextField cell = new TextField();
-        cell.setPrefSize(50, 50);
+        cell.setPrefSize(60, 60);
 
         int value = sudoku.getValue(row, col);
         int initialValue = sudoku.getInitialValue(row, col);
@@ -142,21 +143,49 @@ public class gameController
         return cell;
     }
 
+
     /**
      * Gets CSS style for a cell
      */
     private String getCellStyle(int row, int col, boolean isHint)
     {
-        String style = "-fx-font-size: 18px; -fx-alignment: center; -fx-border-color: black; -fx-border-width: 1;";
+        StringBuilder style = new StringBuilder();
 
-        // Thick borders between blocks
-        if (col == 2) style += " -fx-border-right-width: 3;";
-        if (row == 1 || row == 3) style += " -fx-border-bottom-width: 3;";
+        // Estilo base
+        style.append("-fx-font-size: 18px; -fx-alignment: center; ");
 
-        // Background color for hints
-        if (isHint) style += " -fx-background-color: #f0f0f0; -fx-font-weight: bold;";
+        if (isHint)
+        {
+            style.append("-fx-background-color: #f0f0f0; ");
+        }
+        else
+        {
+            style.append("-fx-background-color: white; ");
+        }
 
-        return style;
+        style.append("-fx-border-color: black; ");
+        style.append("-fx-border-style: solid inside; ");
+
+        // Grosor de bordes para cada lado
+        double top = 0.2, right = 0.2, bottom = 0.2, left = 0.2;
+
+        // Bordes gruesos entre bloques 2x3
+        if (row == 1 || row == 3) bottom = 2;  // Linea gruesa abajo
+        if (col == 2) right = 2;               // Linea gruesa derecha
+
+        // Bordes exteriores gruesos
+        if (row == 0) top = 2;
+        if (row == 5) bottom = 2;
+        if (col == 0) left = 2;
+        if (col == 5) right = 2;
+
+        style.append("-fx-border-width: ")
+                .append(top).append(" ")
+                .append(right).append(" ")
+                .append(bottom).append(" ")
+                .append(left).append(";");
+
+        return style.toString();
     }
 
     /**
