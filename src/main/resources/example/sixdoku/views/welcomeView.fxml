@@ -14,7 +14,13 @@
          </font>
       </Label>
       <ImageView fx:id="imageIcon1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="guideButton" mnemonicParsing="false" onAction="#instructions" text="INSTRUCCIONES" />
-      <Button fx:id="playButton" mnemonicParsing="false" onAction="#nextStage" text="JUGAR" />
+      <Button fx:id="guideButton" mnemonicParsing="false" onAction="#instructions" style="-fx-background-color: #D6DBE2; -fx-border-color: black;" text="INSTRUCCIONES">
+         <font>
+            <Font name="Verdana" size="12.0" />
+         </font></Button>
+      <Button fx:id="playButton" mnemonicParsing="false" onAction="#nextStage" style="-fx-background-color: #D6DBE2; -fx-border-color: #141E00;" text="JUGAR">
+         <font>
+            <Font name="Verdana" size="12.0" />
+         </font></Button>
    </children>
 </VBox>
