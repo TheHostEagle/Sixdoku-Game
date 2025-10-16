@@ -1,7 +1,10 @@
 package example.sixdoku.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import example.sixdoku.models.Sudoku;
@@ -9,6 +12,8 @@ import example.sixdoku.models.AlertBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+
+import java.util.Optional;
 
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -25,6 +30,8 @@ public class gameController
     private Button validateButton;
 
     private Sudoku sudoku;
+    private int count = 0;
+    private boolean gameStarted = false;
 
     /**
      * Automatically executed when view loads
@@ -85,14 +92,14 @@ public class gameController
             }
             else
             {
-                cell.setEditable(true);
+                cell.setEditable(gameStarted);
                 cell.setStyle(getCellStyle(row, col, false));
             }
         }
         else
         {
             cell.setText("");
-            cell.setEditable(true);
+            cell.setEditable(gameStarted);
             cell.setStyle(getCellStyle(row, col, false));
         }
 
@@ -196,6 +203,9 @@ public class gameController
     {
         AlertBox alertBox = new AlertBox();
         sudoku.generateSudoku();
+        count = 0;
+        gameStarted = true;
+        imageIcon2.setVisible(true);
         displayBoard();
         alertBox.showAlertBox("Juego Iniciado", "Un nuevo Sixdoku fue generado!","");
     }
@@ -206,12 +216,31 @@ public class gameController
     @FXML
     private void validate()
     {
-        AlertBox alertBox = new AlertBox();
         if (sudoku.isSolved())
         {
-            alertBox.showAlertBox("Felicidades!", "Has resuelto correctamente el Sixdoku!","");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Felicidades");
+            alert.setHeaderText("Has completado el sudoku");
+            alert.setContentText("¿Que deseas hacer?");
+            ButtonType newGame = new  ButtonType("Nuevo sudoku");
+            ButtonType exit = new  ButtonType("Salir");
+            alert.getButtonTypes().setAll(newGame, exit);
+            //Esperar la respuesta del jugador
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if(result.isPresent())
+            {
+                if(result.get() == newGame)
+                {
+                    startGame();
+                } else if(result.get() == exit)
+                {
+                    Platform.exit();
+                }
+            }
         } else
         {
+            AlertBox alertBox = new AlertBox();
             alertBox.showAlertBox("Sigue Intentando", "El Sixdoku aun no esta resuelto.","");
         }
     }
@@ -247,6 +276,12 @@ public class gameController
 
     private void giveHint()
     {
+        if(count >= 3) {
+            AlertBox alertBox = new AlertBox();
+            alertBox.showAlertBox("Limite de pistas", "Ya se usaron todas las pistas permitidas", "");
+            imageIcon2.setVisible(false);
+            return;
+        }
         // Buscar celdas vacías y guardar la cuenta en este contador
         int emptyCount = 0;
         for (int row = 0; row < 6; row++)
@@ -260,9 +295,17 @@ public class gameController
             }
         }
 
+        if(emptyCount <= 2)
+        {
+            AlertBox alertBox = new AlertBox();
+            alertBox.showAlertBox("Sin pistas", "Muy pocas celdas, no es posible usar la pista", "");
+            return;
+        }
+
         if (emptyCount == 0)
         {
-            new AlertBox().showAlertBox("Sin pistas", "No hay celdas vacias", "");
+            AlertBox alertBox = new AlertBox();
+            alertBox.showAlertBox("Sin pistas", "No hay celdas vacias", "");
             return;
         }
 
@@ -282,7 +325,9 @@ public class gameController
                         sudoku.setValueDirectly(row, col, correctNumber);
 
                         displayBoard();
-                        new AlertBox().showAlertBox("Pista", "Numero " + correctNumber + " agregado", "");
+                        count++;
+                        AlertBox alertBox = new AlertBox();
+                        alertBox.showAlertBox("Pista", "Numero " + correctNumber + " agregado", "");
                         return;
                     }
                     currentIndex++;
