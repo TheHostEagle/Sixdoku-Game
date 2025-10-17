@@ -1,7 +1,9 @@
 package example.sixdoku.controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -43,6 +45,20 @@ public class gameController
         showEmptyBoard();
         startGIF();
 
+    }
+
+    /**
+     * Show the instructions of the game.
+     * @param event is the action that happens when the user press the button.
+     */
+    @FXML
+    void instructionsGame(ActionEvent event) {
+        AlertBox alertBox = new AlertBox();
+        alertBox.showAlertBox("Instrucciones del juego",
+                "El objetivo del juego es llenar toda la cuadrícula de 6 filas por 6 columnas con números del 1 al 6, siguiendo estas reglas básicas:\n" +
+                        "1.) Cada fila debe contener los números del 1 al 6, sin repetir ninguno.\n" +
+                        "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n",
+                "INSTRUCCIONES DE JUEGO - SUDOKU 6X6:");
     }
 
     /**
@@ -216,7 +232,33 @@ public class gameController
     @FXML
     private void validate()
     {
-        if (sudoku.isSolved())
+        boolean correct = true;
+
+        for(Node node : gridPane.getChildren())
+        {
+            if(node instanceof TextField cell)
+            {
+                int row = GridPane.getRowIndex(cell);
+                int col = GridPane.getColumnIndex(cell);
+                int userValue = sudoku.getValue(row, col);
+                int correctValue = sudoku.getSolution().get(row * 6 + col );
+                if (userValue == 0)
+                {
+                    cell.setStyle(getCellStyle(row, col, false));
+                    correct = false;
+                }
+                else if (userValue != correctValue)
+                {
+                    cell.setStyle("-fx-background-color: #ffb3b3; -fx-font-weight: bold; -fx-font-size: 18px; -fx-alignment: center; -fx-border-color: black; -fx-border-width: 1;");
+                    correct = false;
+                }
+                else
+                {
+                    cell.setStyle(getCellStyle(row, col, true));
+                }
+            }
+        }
+        if (correct == true)
         {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Felicidades");

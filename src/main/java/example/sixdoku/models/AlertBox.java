@@ -12,7 +12,6 @@ public class AlertBox implements IAlertBox
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        //alert.getDialogPane().setPrefSize(400, 450);
         alert.showAndWait();
     }
 }

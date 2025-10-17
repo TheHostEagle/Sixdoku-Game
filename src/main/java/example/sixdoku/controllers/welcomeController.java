@@ -21,7 +21,11 @@ public class welcomeController
     public void instructions()
     {
         AlertBox alertBox = new AlertBox();
-        alertBox.showAlertBox("INSTRUCCIONES","{añadir}","{añadir luego}");
+        alertBox.showAlertBox("Instrucciones del juego",
+                "El objetivo del juego es llenar toda la cuadrícula de 6 filas por 6 columnas con números del 1 al 6, siguiendo estas reglas básicas:\n" +
+                "1.) Cada fila debe contener los números del 1 al 6, sin repetir ninguno.\n" +
+                "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n",
+                "INSTRUCCIONES DE JUEGO - SUDOKU 6X6:");
     }
 
     @FXML
