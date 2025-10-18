@@ -19,6 +19,9 @@ import java.util.Optional;
 
 import static javafx.scene.input.KeyCode.ENTER;
 
+/**
+ * This class controls the actions that happen in the game window
+ */
 public class gameController
 {
 
@@ -57,7 +60,8 @@ public class gameController
         alertBox.showAlertBox("Instrucciones del juego",
                 "El objetivo del juego es llenar toda la cuadrícula de 6 filas por 6 columnas con números del 1 al 6, siguiendo estas reglas básicas:\n" +
                         "1.) Cada fila debe contener los números del 1 al 6, sin repetir ninguno.\n" +
-                        "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n",
+                        "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n\n" +
+                        "4.) SI REQUIERE UNA PISTA PRESIONE EL GIF QUE SE ENCUENTRA EN LA VENTANA DE JUEGO\n",
                 "INSTRUCCIONES DE JUEGO - SUDOKU 6X6:");
     }
 
@@ -287,6 +291,9 @@ public class gameController
         }
     }
 
+    /**
+     * Creates a GIF image in the game window
+     */
     public void startGIF()
     {
         try
@@ -304,6 +311,10 @@ public class gameController
         }
     }
 
+    /**
+     * Executes a text in the terminal when the GIF is pressed
+     * @param event is the action that happens when the user press the GIF with the mouse.
+     */
     @FXML
     private void handleImageClick(MouseEvent event)
     {
@@ -314,8 +325,9 @@ public class gameController
         }
     }
 
-
-
+    /**
+     * Gives a hint in the board when the user wants it
+     */
     private void giveHint()
     {
         if(count >= 3) {

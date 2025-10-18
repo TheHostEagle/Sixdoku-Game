@@ -113,7 +113,12 @@ public class Sudoku
         return false;
     }
 
-    //para modificar el board original.
+    /**
+     * Modify the original board
+     * @param row the actual cell row
+     * @param col the actual cell column
+     * @param number the value that is in the cell
+     */
     public void setValueDirectly(int row, int col, int number)
     {
         int position = convertCoordinates(row, col);
