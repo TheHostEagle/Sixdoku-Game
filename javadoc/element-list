@@ -1,0 +1,4 @@
+module:example.sixdoku
+example.sixdoku
+example.sixdoku.controllers
+example.sixdoku.models

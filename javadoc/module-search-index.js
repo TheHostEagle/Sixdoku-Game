@@ -1,0 +1,1 @@
+moduleSearchIndex = [{"l":"example.sixdoku"}];updateSearchResults();

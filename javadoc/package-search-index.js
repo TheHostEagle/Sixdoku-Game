@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"example.sixdoku","l":"example.sixdoku"},{"m":"example.sixdoku","l":"example.sixdoku.controllers"},{"m":"example.sixdoku","l":"example.sixdoku.models"}];updateSearchResults();

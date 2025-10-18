@@ -11,12 +11,18 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class controls the actions in the welcome view
+ */
 public class welcomeController
 {
 
     @FXML
     private Pane rootPane;
 
+    /**
+     * Shows the game instructions with an AlertBox
+     */
     @FXML
     public void instructions()
     {
@@ -24,10 +30,14 @@ public class welcomeController
         alertBox.showAlertBox("Instrucciones del juego",
                 "El objetivo del juego es llenar toda la cuadrícula de 6 filas por 6 columnas con números del 1 al 6, siguiendo estas reglas básicas:\n" +
                 "1.) Cada fila debe contener los números del 1 al 6, sin repetir ninguno.\n" +
-                "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n",
+                "2.) Cada columna también debe contener los números del 1 al 6, sin repeticiones.\n" + "3.) El tablero está dividido en seis bloques de 2x3 celdas, y en cada bloque también deben aparecer los números del 1 al 6 una sola vez.\n\n" +
+                "4.)  SI REQUIERE UNA PISTA PRESIONE EL GIF QUE SE ENCUENTRA EN LA VENTANA DE JUEGO\n",
                 "INSTRUCCIONES DE JUEGO - SUDOKU 6X6:");
     }
 
+    /**
+     * Takes you to the game window
+     */
     @FXML
     public void nextStage()
     {
